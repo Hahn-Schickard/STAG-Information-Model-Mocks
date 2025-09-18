@@ -1,6 +1,6 @@
 
-#include <Information_Model/ElementMock.hpp>
-#include <Information_Model/MockBuilder.hpp>
+#include <Information_Model_Mocks/ElementMock.hpp>
+#include <Information_Model_Mocks/MockBuilder.hpp>
 #include <iostream>
 
 int main() {

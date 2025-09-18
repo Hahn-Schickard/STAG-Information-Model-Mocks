@@ -11,7 +11,6 @@ class PackageTest(ConanFile):
 
     def requirements(self):
         self.requires(self.tested_reference_str)
-        self.requires("information_model/[~0.5]@hahn-schickard/stable")
 
     def build(self):
         cmake = CMake(self)

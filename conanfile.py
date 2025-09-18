@@ -64,7 +64,11 @@ class PackageConan(ConanFile):
         self.requires("stoppable/[~0.3]@hahn-schickard/stable",
                       visible=False
                       )
-        self.requires("information_model/[~0.5]@hahn-schickard/stable")
+        self.requires("information_model/[~0.5]@hahn-schickard/stable",
+                      headers=True,
+                      libs=True,
+                      transitive_headers=True,
+                      transitive_libs=True)
         self.requires("gtest/1.17.0",
                       headers=True,
                       libs=True,
@@ -114,7 +118,11 @@ class PackageConan(ConanFile):
         self.cpp_info.libs = collect_libs(self)
         self.cpp_info.set_property("cmake_find_mode", "both")
         # @+ START USER DEFINES
-        self.cpp_info.requires = ["gtest::gtest", "gtest::gmock"]
+        self.cpp_info.requires = [
+            "gtest::gtest",
+            "gtest::gmock",
+            "information_model::information_model"
+        ]
         # @- END USER DEFINES
         self.cpp_info.set_property("cmake_file_name", self.full_name)
         cmake_target_name = self.full_name + "::" + self.full_name
