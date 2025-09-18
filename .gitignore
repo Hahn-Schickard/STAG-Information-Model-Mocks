@@ -1,0 +1,15 @@
+build
+!/.vscode
+.vscode/*
+!/.vscode/cmake-variants.yaml
+logs/*
+valgrind_results
+code_coverage_report
+clang_tidy_fixes
+clang-format-fixes
+docs/html
+docs/latex
+*.cmake.in
+*.log
+*.info
+CMakeUserPresets.json

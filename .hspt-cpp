@@ -1,0 +1,11 @@
+{
+    "project_template": "cpp",
+    "project_template_version": "0.3.1",
+    "project_name_long": "Information Model Mocks",
+    "project_name_short": "Information_Model_Mocks",
+    "project_description": "Mock implementation of Information Model interfaces as GTest mocks",
+    "license": "Apache v2",
+    "gitignore": true,
+    "code_formatting": true,
+    "contribution_guide": true
+}
