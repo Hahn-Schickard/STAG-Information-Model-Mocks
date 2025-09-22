@@ -20,9 +20,6 @@ struct WritableMock : public Writable {
 
   WritableMock(DataType type, const WriteCallback& write_cb);
 
-  WritableMock(
-      const DataVariant& value, const WriteCallback& write_cb, bool write_only);
-
   WritableMock(DataType type, const ReadCallback& read_cb,
       const WriteCallback& write_cb);
 

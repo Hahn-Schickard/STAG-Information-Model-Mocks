@@ -31,15 +31,6 @@ WritableMock::WritableMock(DataType type, const WriteCallback& write_cb)
 }
 
 WritableMock::WritableMock(
-    const DataVariant& value, const WriteCallback& write_cb, bool write_only)
-    : WritableMock(value) {
-  setReadableCalls();
-  readable_->updateValue(value);
-  updateWriteCallback(write_cb);
-  setWriteOnly(write_only);
-}
-
-WritableMock::WritableMock(
     DataType type, const ReadCallback& read_cb, const WriteCallback& write_cb)
     : WritableMock(type, read_cb) {
   updateWriteCallback(write_cb);
