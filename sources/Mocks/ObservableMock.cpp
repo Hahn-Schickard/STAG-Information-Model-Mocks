@@ -30,6 +30,8 @@ void ObservableMock::enableSubscribeFaking(
     is_observing_ = callback;
     ON_CALL(*this, subscribe)
         .WillByDefault(Invoke(this, &ObservableMock::attachObserver));
+  } else {
+    ON_CALL(*this, subscribe).WillByDefault(Return(make_shared<Observer>()));
   }
 }
 
