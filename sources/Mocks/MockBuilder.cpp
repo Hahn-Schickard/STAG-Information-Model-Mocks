@@ -38,15 +38,33 @@ string MockBuilder::addGroup(
   return id;
 }
 
+string MockBuilder::addReadable(
+    const BuildInfo& element_info, DataType data_type) {
+  //@TODO: implement method
+}
+
+string MockBuilder::addReadable(
+    const BuildInfo& element_info, const DataVariant& default_value) {
+  //@TODO: implement method
+}
+
+string MockBuilder::addReadable(const string& parent_id,
+    const BuildInfo& element_info, DataType data_type) {
+  //@TODO: implement method
+}
+
+string MockBuilder::addReadable(const string& parent_id,
+    const BuildInfo& element_info, const DataVariant& default_value) {
+  //@TODO: implement method
+}
+
 string MockBuilder::addReadable(const BuildInfo& element_info,
-    DataType data_type,
-    const ReadCallback& read_cb) {
+    DataType data_type, const ReadCallback& read_cb) {
   return addReadable("", element_info, data_type, read_cb);
 }
 
 string MockBuilder::addReadable(const string& parent_id,
-    const BuildInfo& element_info,
-    DataType data_type,
+    const BuildInfo& element_info, DataType data_type,
     const ReadCallback& read_cb) {
   checkBase();
   if (data_type == DataType::None || data_type == DataType::Unknown) {
@@ -69,18 +87,35 @@ string MockBuilder::addReadable(const string& parent_id,
   return id;
 }
 
+string MockBuilder::addWritable(
+    const BuildInfo& element_info, DataType data_type) {
+  //@TODO: implement method
+}
+
+string MockBuilder::addWritable(
+    const BuildInfo& element_info, const DataVariant& default_value) {
+  //@TODO: implement method
+}
+
+string MockBuilder::addWritable(const string& parent_id,
+    const BuildInfo& element_info, DataType data_type) {
+  //@TODO: implement method
+}
+
+string MockBuilder::addWritable(const string& parent_id,
+    const BuildInfo& element_info, const DataVariant& default_value) {
+  //@TODO: implement method
+}
+
 string MockBuilder::addWritable(const BuildInfo& element_info,
-    DataType data_type,
-    const WriteCallback& write_cb,
+    DataType data_type, const WriteCallback& write_cb,
     const ReadCallback& read_cb) {
   return addWritable("", element_info, data_type, write_cb, read_cb);
 }
 
 string MockBuilder::addWritable(const string& parent_id,
-    const BuildInfo& element_info,
-    DataType data_type,
-    const WriteCallback& write_cb,
-    const ReadCallback& read_cb) {
+    const BuildInfo& element_info, DataType data_type,
+    const WriteCallback& write_cb, const ReadCallback& read_cb) {
   checkBase();
   if (data_type == DataType::None || data_type == DataType::Unknown) {
     throw invalid_argument("Data Type can not be None or Unknown");
@@ -104,19 +139,38 @@ string MockBuilder::addWritable(const string& parent_id,
 }
 
 pair<string, MockBuilder::NotifyCallback> MockBuilder::addObservable(
-    const BuildInfo& element_info,
-    DataType data_type,
-    const ReadCallback& read_cb,
+    const BuildInfo& element_info, DataType data_type,
     const IsObservingCallback& observe_cb) {
+  //@TODO: implement method
+}
+
+pair<string, MockBuilder::NotifyCallback> MockBuilder::addObservable(
+    const BuildInfo& element_info, const DataVariant& default_value,
+    const IsObservingCallback& observe_cb) {
+  //@TODO: implement method
+}
+
+pair<string, MockBuilder::NotifyCallback> MockBuilder::addObservable(
+    const string& parent_id, const BuildInfo& element_info, DataType data_type,
+    const IsObservingCallback& observe_cb) {
+  //@TODO: implement method
+}
+
+pair<string, MockBuilder::NotifyCallback> MockBuilder::addObservable(
+    const string& parent_id, const BuildInfo& element_info,
+    const DataVariant& default_value, const IsObservingCallback& observe_cb) {
+  //@TODO: implement method
+}
+
+pair<string, MockBuilder::NotifyCallback> MockBuilder::addObservable(
+    const BuildInfo& element_info, DataType data_type,
+    const ReadCallback& read_cb, const IsObservingCallback& observe_cb) {
   return addObservable("", element_info, data_type, read_cb, observe_cb);
 }
 
 pair<string, MockBuilder::NotifyCallback> MockBuilder::addObservable(
-    const string& parent_id,
-    const BuildInfo& element_info,
-    DataType data_type,
-    const ReadCallback& read_cb,
-    const IsObservingCallback& observe_cb) {
+    const string& parent_id, const BuildInfo& element_info, DataType data_type,
+    const ReadCallback& read_cb, const IsObservingCallback& observe_cb) {
   checkBase();
   if (data_type == DataType::None || data_type == DataType::Unknown) {
     throw invalid_argument("Data Type can not be None or Unknown");
@@ -144,14 +198,44 @@ pair<string, MockBuilder::NotifyCallback> MockBuilder::addObservable(
 }
 
 string MockBuilder::addCallable(const BuildInfo& element_info,
-    const ExecuteCallback& execute_cb,
+    DataType result_type, const ParameterTypes& parameter_types) {
+  //@TODO: implement method
+}
+
+string MockBuilder::addCallable(const BuildInfo& element_info,
+    const DataVariant& result_value, const ParameterTypes& parameter_types) {
+  //@TODO: implement method
+}
+
+string MockBuilder::addCallable(
+    const BuildInfo& element_info, const ExecutorPtr& executor) {
+  //@TODO: implement method
+}
+
+string MockBuilder::addCallable(const string& parent_id,
+    const BuildInfo& element_info, DataType result_type,
     const ParameterTypes& parameter_types) {
+  //@TODO: implement method
+}
+
+string MockBuilder::addCallable(const string& parent_id,
+    const BuildInfo& element_info, const DataVariant& result_value,
+    const ParameterTypes& parameter_types) {
+  //@TODO: implement method
+}
+
+string MockBuilder::addCallable(const string& parent_id,
+    const BuildInfo& element_info, const ExecutorPtr& executor) {
+  //@TODO: implement method
+}
+
+string MockBuilder::addCallable(const BuildInfo& element_info,
+    const ExecuteCallback& execute_cb, const ParameterTypes& parameter_types) {
   return addCallable("", element_info, execute_cb, parameter_types);
 }
 
 string MockBuilder::addCallable(const string& parent_id,
-    const BuildInfo& element_info,
-    const ExecuteCallback& execute_cb,
+    const BuildInfo& element_info, const ExecuteCallback& execute_cb,
     const ParameterTypes& parameter_types) {
   checkBase();
   if (!execute_cb) {
@@ -173,27 +257,18 @@ string MockBuilder::addCallable(const string& parent_id,
 }
 
 string MockBuilder::addCallable(const BuildInfo& element_info,
-    DataType result_type,
-    const ExecuteCallback& execute_cb,
+    DataType result_type, const ExecuteCallback& execute_cb,
     const AsyncExecuteCallback& async_execute_cb,
-    const CancelCallback& cancel_cb,
-    const ParameterTypes& parameter_types) {
-  return addCallable("",
-      element_info,
-      result_type,
-      execute_cb,
-      async_execute_cb,
-      cancel_cb,
-      parameter_types);
+    const CancelCallback& cancel_cb, const ParameterTypes& parameter_types) {
+  return addCallable("", element_info, result_type, execute_cb,
+      async_execute_cb, cancel_cb, parameter_types);
 }
 
 string MockBuilder::addCallable(const string& parent_id,
-    const BuildInfo& element_info,
-    DataType result_type,
+    const BuildInfo& element_info, DataType result_type,
     const ExecuteCallback& execute_cb,
     const AsyncExecuteCallback& async_execute_cb,
-    const CancelCallback& cancel_cb,
-    const ParameterTypes& parameter_types) {
+    const CancelCallback& cancel_cb, const ParameterTypes& parameter_types) {
   checkBase();
   if (result_type == DataType::None || result_type == DataType::Unknown) {
     throw invalid_argument("Result Type can not be None or Unknown");
@@ -223,8 +298,7 @@ string MockBuilder::addCallable(const string& parent_id,
 }
 
 void MockBuilder::addElementMock(const ElementFunction& function,
-    const std::string& id,
-    const BuildInfo& element_info) {
+    const std::string& id, const BuildInfo& element_info) {
   auto element = make_shared<NiceMock<ElementMock>>(
       function, id, FullMetaInfo{element_info.name, element_info.description});
   result_->addElement(element);
