@@ -14,6 +14,8 @@ struct CallableMock : public Callable {
 
   CallableMock() = default;
 
+  explicit CallableMock(const ExecutorPtr& executor);
+
   explicit CallableMock(DataType result_type,
       const ParameterTypes& supported_params = {},
       const Executor::Response& default_response = std::make_exception_ptr(

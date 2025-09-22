@@ -4,6 +4,10 @@ namespace Information_Model::testing {
 using namespace std;
 using namespace ::testing;
 
+CallableMock::CallableMock(const ExecutorPtr& executor) : executor_(executor) {
+  setExecutor();
+}
+
 CallableMock::CallableMock(DataType result_type,
     const ParameterTypes& supported_params,
     const Executor::Response& default_response)
