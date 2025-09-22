@@ -30,14 +30,55 @@ struct ObservableMock : public Observable {
 
   ~ObservableMock() override = default;
 
+  /**
+   * @brief Enables or disables the usage of the internal Observer tracker
+   *
+   * If a given callback is not null, enables internal Observer tracking and
+   * notification mechanism. If the given callback is null, configures the
+   * subscribe() method to return a dummy ObserverPtr instance that has no
+   * attached notifier (Dummy Observers will not be notified when notify() is
+   * called)
+   *
+   * @param callback
+   */
   void enableSubscribeFaking(const IsObservingCallback& callback);
 
+  /**
+   * @brief Change the modeled data type
+   *
+   * Same as @ref ReadableMock::updateType()
+   *
+   * @param type
+   */
   void updateType(DataType type);
 
+  /**
+   * @brief Change the default read() result
+   *
+   * Same as @ref ReadableMock::updateValue()
+   *
+   * @param value
+   */
   void updateValue(const DataVariant& value);
 
+  /**
+   * @brief Change the internal callback that is used for read() invocations
+   * If the given callback is set to nullptr, forces the read() calls to throw
+   * ReadCallbackUnavailable exception
+   *
+   * Same as @ref ReadableMock::updateReadCallback()
+   *
+   * @param read_cb
+   */
   void updateReadCallback(const ReadCallback& read_cb);
 
+  /**
+   * @brief Dispatch a new notification value to all registered Observers
+   * (Does nothing if enableSubscribeFaking() was never called or the last
+   * enableSubscribeFaking() call passed a nullptr parameter value)
+   *
+   * @param value
+   */
   void notify(const DataVariant& value);
 
   MOCK_METHOD(DataType, dataType, (), (const final));

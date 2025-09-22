@@ -20,10 +20,33 @@ struct ReadableMock : virtual public Readable {
 
   ~ReadableMock() override = default;
 
+  /**
+   * @brief Change the modeled data type
+   *
+   * Sets the result of dataType() method calls
+   *
+   * @param type
+   */
   void updateType(DataType type);
 
+  /**
+   * @brief Change the default read() and dataType() method results
+   *
+   * @attention Overrides the previous updateReadCallback() functionality
+   *
+   * @param value
+   */
   void updateValue(const DataVariant& value);
 
+  /**
+   * @brief Change the internal callback that is used for read() invocations
+   * If the given callback is set to nullptr, forces the read() calls to throw
+   * ReadCallbackUnavailable exception
+   *
+   * @attention Overrides the previous updateValue() functionality
+   *
+   * @param read_cb
+   */
   void updateReadCallback(const ReadCallback& read_cb);
 
   MOCK_METHOD(DataType, dataType, (), (const final));

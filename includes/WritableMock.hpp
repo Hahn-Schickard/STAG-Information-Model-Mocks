@@ -30,14 +30,52 @@ struct WritableMock : public Writable {
 
   void setWriteOnly(bool write_only) const;
 
+  /**
+   * @brief Change the modeled data type
+   *
+   * Same as @ref ReadableMock::updateType()
+   *
+   * @param type
+   */
   void updateType(DataType type);
 
+  /**
+   * @brief Change the default read() result
+   *
+   * Same as @ref ReadableMock::updateValue()
+   *
+   * @param value
+   */
   void updateValue(const DataVariant& value);
 
+  /**
+   * @brief Change the internal callback that is used for read() invocations
+   * If the given callback is set to nullptr, forces the read() calls to throw
+   * NonReadable exception
+   *
+   * Same as @ref ReadableMock::updateReadCallback()
+   *
+   * @param read_cb
+   */
   void updateReadCallback(const ReadCallback& read_cb);
 
+  /**
+   * @brief Changes the internal callback that is called for write() invocations
+   * If the given callback is set to nullptr, forces the write() calls to throw
+   * WriteCallbackUnavailable exception
+   *
+   * @param write_cb
+   */
   void updateWriteCallback(const WriteCallback& write_cb);
 
+  /**
+   * @brief Updates both read() and write() invocation callbacks at the same
+   * time Same as calling @ref updateReadCallback() and @ref
+   * updateWriteCallback() one after another
+   *
+   * @param read_cb
+   * @param write_cb
+   */
   void updateCallbacks(
       const ReadCallback& read_cb, const WriteCallback& write_cb);
 

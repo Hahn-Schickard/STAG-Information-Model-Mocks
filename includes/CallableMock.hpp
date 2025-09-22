@@ -41,10 +41,41 @@ struct CallableMock : public Callable {
   MOCK_METHOD(DataType, resultType, (), (const final));
   MOCK_METHOD(ParameterTypes, parameterTypes, (), (const final));
 
+  /**
+   * @brief Returns the configured Executor instance
+   *
+   * @throws std::logic_error - if external callbacks are used
+   *
+   * @return ExecutorPtr
+   */
   ExecutorPtr getExecutor() const;
 
+  /**
+   * @brief Changes the configured executor or external callback usage to the
+   * given executor. If given executor is null, sets CallableMock::execute(),
+   * CallableMock::call(), CallableMock::asyncCall() and
+   * CallableMock::cancelAsynCall() methods to throw ExecutorNotAvailable
+   * exception when called
+   *
+   * @param executor
+   */
   void changeExecutor(const ExecutorPtr& executor);
+
+  /**
+   * @brief Creates a default executor instance based on modeled result type and
+   * supported parameters. Overrides any previous executor or external callback
+   * links
+   *
+   */
   void useDefaultExecutor();
+
+  /**
+   * @brief Resets this mock to used initially provided external callbacks
+   *
+   * @throws std::logic_error - if no external callback were set during
+   * construction
+   *
+   */
   void useDefaultCallbacks();
 
 private:
