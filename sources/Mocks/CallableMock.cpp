@@ -36,7 +36,12 @@ CallableMock::CallableMock(DataType result_type,
   setCallbacks();
 }
 
-ExecutorPtr CallableMock::getExecutor() const { return executor_; }
+ExecutorPtr CallableMock::getExecutor() const {
+  if (!executor_) {
+    throw logic_error("External callbacks are used instead of the executor");
+  }
+  return executor_;
+}
 
 void CallableMock::changeExecutor(const ExecutorPtr& executor) {
   if (executor_) {
