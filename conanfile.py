@@ -69,7 +69,7 @@ class PackageConan(ConanFile):
                       libs=True,
                       transitive_headers=True,
                       transitive_libs=True)
-        self.requires("gtest/1.17.0",
+        self.requires("gtest/[~1.17]",
                       headers=True,
                       libs=True,
                       transitive_headers=True,
