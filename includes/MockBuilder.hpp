@@ -1,6 +1,7 @@
 #ifndef __STAG_INFORMATION_MODEL_MOCKS_MOCK_BUILDER_HPP
 #define __STAG_INFORMATION_MODEL_MOCKS_MOCK_BUILDER_HPP
 #include "DeviceMock.hpp"
+#include "FakeExecutor.hpp"
 
 #include <Information_Model/DeviceBuilder.hpp>
 
@@ -27,7 +28,7 @@ struct MockBuilder : public DeviceBuilder {
    *
    */
   std::string addReadable(
-      const BuildInfo& element_info, DataVariant default_value);
+      const BuildInfo& element_info, const DataVariant& default_value);
 
   std::string addReadable(const BuildInfo& element_info, DataType data_type,
       const ReadCallback& read_cb) final;
@@ -50,10 +51,7 @@ struct MockBuilder : public DeviceBuilder {
    *
    */
   std::string addReadable(const std::string& parent_id,
-      const BuildInfo& element_info, DataVariant default_value);
-
-  std::string addReadable(const BuildInfo& element_info, DataType data_type,
-      const ReadCallback& read_cb) final;
+      const BuildInfo& element_info, const DataVariant& default_value);
 
   /**
    * @brief Helper method to create default write-only writable
@@ -67,7 +65,7 @@ struct MockBuilder : public DeviceBuilder {
    *
    */
   std::string addWritable(
-      const BuildInfo& element_info, DataVariant default_value);
+      const BuildInfo& element_info, const DataVariant& default_value);
 
   std::string addWritable(const BuildInfo& element_info, DataType data_type,
       const WriteCallback& write_cb,
@@ -94,7 +92,7 @@ struct MockBuilder : public DeviceBuilder {
    *
    */
   std::string addWritable(const std::string& parent_id,
-      const BuildInfo& element_info, DataVariant default_value);
+      const BuildInfo& element_info, const DataVariant& default_value);
 
   /**
    * @brief Helper method to create default mock observable
@@ -110,7 +108,7 @@ struct MockBuilder : public DeviceBuilder {
    *
    */
   std::pair<std::string, NotifyCallback> addObservable(
-      const BuildInfo& element_info, DataVariant default_value,
+      const BuildInfo& element_info, const DataVariant& default_value,
       const IsObservingCallback& observe_cb);
 
   std::pair<std::string, NotifyCallback> addObservable(
@@ -138,7 +136,7 @@ struct MockBuilder : public DeviceBuilder {
    */
   std::pair<std::string, NotifyCallback> addObservable(
       const std::string& parent_id, const BuildInfo& element_info,
-      DataVariant default_value, const IsObservingCallback& observe_cb);
+      const DataVariant& default_value, const IsObservingCallback& observe_cb);
 
   /**
    * @brief Helper method to create default mock callable, that uses the
@@ -170,7 +168,8 @@ struct MockBuilder : public DeviceBuilder {
    *
    */
   std::string addCallable(const BuildInfo& element_info,
-      DataVariant result_value, const ParameterTypes& parameter_types = {});
+      const DataVariant& result_value,
+      const ParameterTypes& parameter_types = {});
 
   /**
    * @brief Helper method to create a mock callable, that uses
@@ -208,7 +207,7 @@ struct MockBuilder : public DeviceBuilder {
    *
    */
   std::string addCallable(const std::string& parent_id,
-      const BuildInfo& element_info, DataVariant result_value,
+      const BuildInfo& element_info, const DataVariant& result_value,
       const ParameterTypes& parameter_types = {});
 
   /**
