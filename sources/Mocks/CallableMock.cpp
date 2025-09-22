@@ -28,8 +28,7 @@ CallableMock::CallableMock(
 CallableMock::CallableMock(DataType result_type,
     const ExecuteCallback& execute_cb,
     const AsyncExecuteCallback& async_execute_cb,
-    const CancelCallback& cancel_cb,
-    const ParameterTypes& supported_params)
+    const CancelCallback& cancel_cb, const ParameterTypes& supported_params)
     : result_type_(result_type), execute_cb_(execute_cb),
       async_execute_cb_(async_execute_cb), cancel_cb_(cancel_cb),
       supported_params_(supported_params) {
