@@ -4,10 +4,21 @@
 
 namespace Information_Model::testing {
 
+/**
+ * @brief Used by the CallableMock to delegate asynchronous execution and
+ * ResultFuture fulfillment
+ *
+ */
 struct Executor {
   using Response = std::variant<DataVariant, std::exception_ptr>;
 
   virtual ~Executor() = default;
+
+  virtual DataType resultType() const = 0;
+
+  virtual ParameterTypes parameterTypes() const = 0;
+
+  virtual void cancelAll() = 0;
 
   /**
    * @brief Respond with a given response value to a given
@@ -76,12 +87,6 @@ private:
   [[nodiscard]] virtual ResultFuture asyncCall(const Parameters& params) = 0;
 
   virtual void cancel(uintmax_t call_id) = 0;
-
-  virtual void cancelAll() = 0;
-
-  virtual DataType resultType() const = 0;
-
-  virtual ParameterTypes parameterTypes() const = 0;
 
   friend struct CallableMock;
 };
