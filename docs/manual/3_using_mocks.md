@@ -112,4 +112,12 @@ cerr_observer.reset();
 
 As explained in googletest github issue [[Bug]: valgrind reports still reachable memory leaks when StrictMock or NiceMock are used #4109](https://github.com/google/googletest/issues/4109#issuecomment-1376362854) using the [NiceMock](https://google.github.io/googletest/reference/mocking.html#NiceMock) or [StrictMock](https://google.github.io/googletest/reference/mocking.html#StrictMock) decorators causes valgrind memory analysis to report `UninterestingCallReactionMap` and it's related hash table to be still reachable in the loss record. This behavior is expected and should not cause alarm. However having false positive result during memory analysis is not really desired. For this reason, this project provides a `valgrind.supp` file in the root of this project, which tells valgrind, which symbols should be ignored during analysis.
 
-In general cases, you should be fine reusing the `valgrind.supp` file this project provides, but in case you need to make your own, you can find the relevant information on suppressing valgrind errors in the Valgrind manual section [2.5 Suppressing errors](https://valgrind.org/docs/manual/manual-core.html) or as a quick and simple summery in [wxWiki](https://wiki.wxwidgets.org/Valgrind_Suppression_File_Howto)
+In general cases, you should be fine reusing the `valgrind.supp` file this project provides, but in case you need to make your own, you can generate a the content of your new suppression file by running the following command: 
+
+```bash
+valgrind --leak-check=full --num-callers=500 --fair-sched=try --show-reachable=yes --gen-suppressions=all ${TARGET_EXECUTABLE} &> >(tee valgrind.log)
+```
+
+This will dump the valgrind output with the suppression rules into a `valgrind.log` file in your current work directory, however you will have to manually edit this file to only contain `{<insert_a_suppression_name_here>...}` text blocks. Furthermore you will have to verify that you are saving only the desired valgrind suppression rules instead of suppressing all vaglrind errors.
+
+You can find the relevant information on suppressing valgrind errors in the Valgrind manual section [2.5 Suppressing errors](https://valgrind.org/docs/manual/manual-core.html) or as a quick and simple summery in [wxWiki](https://wiki.wxwidgets.org/Valgrind_Suppression_File_Howto)
