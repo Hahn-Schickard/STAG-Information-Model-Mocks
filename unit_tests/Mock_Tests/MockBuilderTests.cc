@@ -19,52 +19,45 @@ TEST(MockBuilderTests, throwsDeviceBuildInProgress) {
 }
 
 TEST(MockBuilderTests, throwsDeviceInfoNotSet) {
-  DeviceBuilderPtr builder = make_shared<MockBuilder>();
+  auto builder = make_shared<MockBuilder>();
 
   EXPECT_THROW(builder->addGroup(BuildInfo{"group_name"}), DeviceInfoNotSet);
 
   EXPECT_THROW(builder->addGroup("group_id", BuildInfo{}), DeviceInfoNotSet);
 
-  EXPECT_THROW(builder->addReadable(
-                   BuildInfo{"readable_name"}, DataType::Boolean, nullptr),
+  EXPECT_THROW(
+      builder->addReadable(BuildInfo{"readable_name"}, DataType::Boolean),
+      DeviceInfoNotSet);
+
+  EXPECT_THROW(builder->addReadable("group_id", BuildInfo{}, DataType::Boolean),
       DeviceInfoNotSet);
 
   EXPECT_THROW(
-      builder->addReadable("group_id", BuildInfo{}, DataType::Boolean, nullptr),
-      DeviceInfoNotSet);
+      builder->addWritable(BuildInfo{}, DataType::Boolean), DeviceInfoNotSet);
 
-  EXPECT_THROW(builder->addWritable(BuildInfo{}, DataType::Boolean, nullptr),
-      DeviceInfoNotSet);
-
-  EXPECT_THROW(
-      builder->addWritable("group_id", BuildInfo{}, DataType::Boolean, nullptr),
+  EXPECT_THROW(builder->addWritable("group_id", BuildInfo{}, DataType::Boolean),
       DeviceInfoNotSet);
 
   EXPECT_THROW(
-      builder->addObservable(BuildInfo{}, DataType::Boolean, nullptr, nullptr),
+      builder->addObservable(BuildInfo{}, DataType::Boolean, [](bool) {}),
+      DeviceInfoNotSet);
+
+  EXPECT_THROW(builder->addObservable(
+                   "group_id", BuildInfo{}, DataType::Boolean, [](bool) {}),
       DeviceInfoNotSet);
 
   EXPECT_THROW(
-      builder->addObservable(
-          "group_id", BuildInfo{}, DataType::Boolean, nullptr, nullptr),
+      builder->addCallable(BuildInfo{}, DataType::Boolean), DeviceInfoNotSet);
+
+  EXPECT_THROW(builder->addCallable("group_id", BuildInfo{}, DataType::Boolean),
       DeviceInfoNotSet);
 
-  EXPECT_THROW(builder->addCallable(
-                   BuildInfo{}, DataType::Boolean, nullptr, nullptr, nullptr),
+  EXPECT_THROW(builder->addCallable(BuildInfo{}, [](const Parameters&) {}),
       DeviceInfoNotSet);
-
-  EXPECT_THROW(builder->addCallable("group_id",
-                   BuildInfo{},
-                   DataType::Boolean,
-                   nullptr,
-                   nullptr,
-                   nullptr),
-      DeviceInfoNotSet);
-
-  EXPECT_THROW(builder->addCallable(BuildInfo{}, nullptr), DeviceInfoNotSet);
 
   EXPECT_THROW(
-      builder->addCallable("group_id", BuildInfo{}, nullptr), DeviceInfoNotSet);
+      builder->addCallable("group_id", BuildInfo{}, [](const Parameters&) {}),
+      DeviceInfoNotSet);
 
   EXPECT_THROW(builder->result(), DeviceInfoNotSet);
 }
@@ -172,10 +165,8 @@ TEST(MockBuilderTests, throwsInvalidArgument) {
   EXPECT_THAT(
       [builder_ptr]() {
         builder_ptr->addObservable(
-            BuildInfo{"observable_name"},
-            DataType::Boolean,
-            []() { return true; },
-            nullptr);
+            BuildInfo{"observable_name"}, DataType::Boolean,
+            []() { return true; }, nullptr);
       },
       ThrowsMessage<invalid_argument>(
           HasSubstr("IsObservingCallback can not be nullptr")));
@@ -189,33 +180,24 @@ TEST(MockBuilderTests, throwsInvalidArgument) {
 
   EXPECT_THAT(
       [builder_ptr]() {
-        builder_ptr->addCallable(BuildInfo{"callable_name"},
-            DataType::None,
-            nullptr,
-            nullptr,
-            nullptr);
+        builder_ptr->addCallable(BuildInfo{"callable_name"}, DataType::None,
+            nullptr, nullptr, nullptr);
       },
       ThrowsMessage<invalid_argument>(
           HasSubstr("Result Type can not be None or Unknown")));
 
   EXPECT_THAT(
       [builder_ptr]() {
-        builder_ptr->addCallable(BuildInfo{"callable_name"},
-            DataType::Unknown,
-            nullptr,
-            nullptr,
-            nullptr);
+        builder_ptr->addCallable(BuildInfo{"callable_name"}, DataType::Unknown,
+            nullptr, nullptr, nullptr);
       },
       ThrowsMessage<invalid_argument>(
           HasSubstr("Result Type can not be None or Unknown")));
 
   EXPECT_THAT(
       [builder_ptr]() {
-        builder_ptr->addCallable(BuildInfo{"callable_name"},
-            DataType::Boolean,
-            nullptr,
-            nullptr,
-            nullptr);
+        builder_ptr->addCallable(BuildInfo{"callable_name"}, DataType::Boolean,
+            nullptr, nullptr, nullptr);
       },
       ThrowsMessage<invalid_argument>(
           HasSubstr("ExecuteCallback can not be nullptr")));
@@ -223,11 +205,8 @@ TEST(MockBuilderTests, throwsInvalidArgument) {
   EXPECT_THAT(
       [builder_ptr]() {
         builder_ptr->addCallable(
-            BuildInfo{"callable_name"},
-            DataType::Boolean,
-            [](const Parameters&) {},
-            nullptr,
-            nullptr);
+            BuildInfo{"callable_name"}, DataType::Boolean,
+            [](const Parameters&) {}, nullptr, nullptr);
       },
       ThrowsMessage<invalid_argument>(
           HasSubstr("AsyncExecuteCallback can not be nullptr")));
@@ -235,8 +214,7 @@ TEST(MockBuilderTests, throwsInvalidArgument) {
   EXPECT_THAT(
       [builder_ptr]() {
         builder_ptr->addCallable(
-            BuildInfo{"callable_name"},
-            DataType::Boolean,
+            BuildInfo{"callable_name"}, DataType::Boolean,
             [](const Parameters&) {},
             [](const Parameters&) {
               promise<DataVariant> promise;
@@ -259,22 +237,18 @@ TEST(MockBuilderTests, returnsCorrectID) {
 
   EXPECT_EQ(builder->addGroup(BuildInfo{"group_name"}), "base_id:0");
 
-  EXPECT_EQ(
-      builder->addReadable(
-          BuildInfo{"readable_name"}, DataType::Boolean, []() { return true; }),
+  EXPECT_EQ(builder->addReadable(BuildInfo{"readable_name"}, DataType::Boolean,
+                []() { return true; }),
       "base_id:1");
 
-  EXPECT_EQ(builder->addWritable(BuildInfo{"writable_name"},
-                DataType::Boolean,
+  EXPECT_EQ(builder->addWritable(BuildInfo{"writable_name"}, DataType::Boolean,
                 [](const DataVariant&) {}),
       "base_id:2");
 
   EXPECT_EQ(builder
                 ->addObservable(
-                    BuildInfo{"observable_name"},
-                    DataType::Boolean,
-                    []() { return true; },
-                    [](bool) {})
+                    BuildInfo{"observable_name"}, DataType::Boolean,
+                    []() { return true; }, [](bool) {})
                 .first,
       "base_id:3");
 
@@ -283,8 +257,7 @@ TEST(MockBuilderTests, returnsCorrectID) {
       "base_id:4");
 
   EXPECT_EQ(builder->addCallable(
-                BuildInfo{"callable_name"},
-                DataType::Boolean,
+                BuildInfo{"callable_name"}, DataType::Boolean,
                 [](const Parameters&) {},
                 [](const Parameters&) {
                   promise<DataVariant> promise;
@@ -299,37 +272,27 @@ TEST(MockBuilderTests, returnsCorrectID) {
   EXPECT_EQ(builder->addGroup("base_id:0", BuildInfo{"sub_group_name"}),
       "base_id:0.0");
 
-  EXPECT_EQ(builder->addReadable("base_id:0.0",
-                BuildInfo{"readable_name"},
-                DataType::Boolean,
-                []() { return true; }),
+  EXPECT_EQ(builder->addReadable("base_id:0.0", BuildInfo{"readable_name"},
+                DataType::Boolean, []() { return true; }),
       "base_id:0.0.0");
 
-  EXPECT_EQ(builder->addWritable("base_id:0.0",
-                BuildInfo{"writable_name"},
-                DataType::Boolean,
-                [](const DataVariant&) {}),
+  EXPECT_EQ(builder->addWritable("base_id:0.0", BuildInfo{"writable_name"},
+                DataType::Boolean, [](const DataVariant&) {}),
       "base_id:0.0.1");
 
   EXPECT_EQ(builder
                 ->addObservable(
-                    "base_id:0.0",
-                    BuildInfo{"observable_name"},
-                    DataType::Boolean,
-                    []() { return true; },
-                    [](bool) {})
+                    "base_id:0.0", BuildInfo{"observable_name"},
+                    DataType::Boolean, []() { return true; }, [](bool) {})
                 .first,
       "base_id:0.0.2");
 
-  EXPECT_EQ(builder->addCallable("base_id:0.0",
-                BuildInfo{"executable_name"},
+  EXPECT_EQ(builder->addCallable("base_id:0.0", BuildInfo{"executable_name"},
                 [](const Parameters&) {}),
       "base_id:0.0.3");
 
   EXPECT_EQ(builder->addCallable(
-                "base_id:0.0",
-                BuildInfo{"callable_name"},
-                DataType::Boolean,
+                "base_id:0.0", BuildInfo{"callable_name"}, DataType::Boolean,
                 [](const Parameters&) {},
                 [](const Parameters&) {
                   promise<DataVariant> promise;
