@@ -347,7 +347,7 @@ void cancelCallback(uintmax_t) {
 
 // The simplest way of creating a mock is by specifying the modeled result data
 // type. This will use the internal Executor to respond to your calls
-auto default_executor = std::make_shared<CallableMock>(DataType::String,
+auto internal_default_executor = std::make_shared<CallableMock>(DataType::String,
     // You can specify which ParameterTypes this Callable should expect and
     // check on execute(), asyncCall() or call() invocations, however this is
     // optional and can be skipped
@@ -357,6 +357,15 @@ auto default_executor = std::make_shared<CallableMock>(DataType::String,
         // Mandatory parameter at position 1
         {1, ParameterType{DataType::Integer, true}},
     });
+
+// Create your custom executor
+auto executor = makeExecutor(DataType::String, ParameterTypes{},
+    std::make_exception_ptr(std::runtime_error("Example error")),
+    std::chrono::nanoseconds(100));
+
+// You can also provide your own custom executor, instead of using the internal 
+// default
+auto external_executor = std::make_shared<CallableMock>(executor);
 
 // Just like before you can use free function
 auto external_callbacks = std::make_shared<CallableMock>(
