@@ -105,7 +105,67 @@ cerr_observer.reset();
 
 ## Using Callable mocks
 
+Using Callable mocks can be a difficult task, if you are using your own callbacks, since you need to keep track of the assigned `ResultFuture` instances and their promises, provide safety mechanisms for multithreading, as well as asynchronous call execution. To make this task simpler, we provide an `Executor` which handles all of these problems for you.
+
 ```cpp
+#include <Information_Model_Mock/CallableMock.hpp>
+
+#include <iostream>
+#include <memory>
+
+namespace Information_Model::testing {
+auto callable = std::make_shared<CallableMock>(DataType::Integer);
+
+// get the executor
+auto executor = callable->getExecutor();
+
+// start the auto response mechanism
+executor->start();
+
+auto result = callable->call(100);
+
+// stop the auto response mechanism
+executor->stop();
+
+// You can queue up responses for future asyncCall() invocations
+executor->queueResponse(20);
+executor->queueResponse(30);
+executor->queueResponse( // you can also queue up exceptions
+    3, std::make_exception_ptr(std::runtime_error("Evil error")));
+
+auto result_future_0 = callable->asyncCall(); // will get 20 value
+auto result_future_1 = callable->asyncCall(); // will get 30 value
+auto result_future_2 = callable->asyncCall(); // will get default integer value
+auto result_future_3 = callable->asyncCall(); // will throw runtime_error
+
+// dispatch the queued up responses to the allocated result futures
+for (uint8_t i = 0; i < 4; i++) {
+  // You can manually dispatch queued up responses
+  executor->respondOnce();
+}
+
+std::cout << "Request 0 result: " << toString(result_future_0.get())
+          << std::endl;
+std::cout << "Request 1 result: " << toString(result_future_1.get())
+          << std::endl;
+std::cout << "Request 1 result: " << toString(result_future_2.get())
+          << std::endl;
+try {
+  std::cerr << "Request 3 result should not return a value but returns: "
+            << toString(result_future_3.get()) << std::endl;
+} catch (const std::runtime_error& ex) {
+  std::cout << "Request 3 threw exception" << ex.waht() " as expected"
+            << std::endl;
+}
+
+auto result_future = callable->asyncCall();
+
+// You can also respond to a specific request via it's id
+executor->respond(result_future.id(), 333);
+
+std::cout << "Request " << result_future.id() " result: " << result_future.get()
+          << std::endl;
+} // namespace Information_Model::testing
 ```
 
 ## Leak still reachable valgrind error for Nice and Strict mocks
