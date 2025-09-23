@@ -163,15 +163,6 @@ struct MockBuilder : public DeviceBuilder {
       const ParameterTypes& parameter_types = {});
 
   /**
-   * @brief Helper method to create default mock callable, that uses the
-   * internal executor and returns a given value
-   *
-   */
-  std::string addCallable(const BuildInfo& element_info,
-      const DataVariant& result_value,
-      const ParameterTypes& parameter_types = {});
-
-  /**
    * @brief Helper method to create a mock callable, that uses
    * a given executor
    *
@@ -202,15 +193,6 @@ struct MockBuilder : public DeviceBuilder {
       const ParameterTypes& parameter_types = {});
 
   /**
-   * @brief Helper method to create default mock callable, that uses the
-   * internal executor and returns a given value
-   *
-   */
-  std::string addCallable(const std::string& parent_id,
-      const BuildInfo& element_info, const DataVariant& result_value,
-      const ParameterTypes& parameter_types = {});
-
-  /**
    * @brief Helper method to create a mock callable, that uses
    * a given executor
    *
@@ -222,6 +204,11 @@ struct MockBuilder : public DeviceBuilder {
 
 private:
   GroupMockPtr getParentGroup(const std::string& parent_id);
+
+  std::string assignID(const std::string& parent_id);
+
+  std::string makeElementMock(const std::string& parent_id,
+      const ElementFunction& function, const BuildInfo& element_info);
 
   void addElementMock(const ElementFunction& function, const std::string& id,
       const BuildInfo& element_info);
