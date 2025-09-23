@@ -10,103 +10,6 @@ struct Executor {
   virtual ~Executor() = default;
 
   /**
-   * @brief Emulates the execution of a function that returns no result.
-   *
-   * Used by CallableMock::execute(const Parameters&) invocations
-   *
-   * @attention This method is intended to set GMock expectations and should not
-   * be directly used by the user
-   *
-   * @see
-   * [EXPECT_CALL](https://google.github.io/googletest/reference/mocking.html#EXPECT_CALL)
-   * for reference
-   *
-   * @param params
-   */
-  virtual void execute(const Parameters& params) = 0;
-
-  /**
-   * @brief Emulates the execution of a function that allocates a ResultFuture
-   * as a result
-   *
-   * Used by CallableMock::call(uintmax_t), CallableMock::call(const
-   * Parameters&, uintmax_t) and CallableMock::asyncCall(const Parameters&)
-   * invocations
-   *
-   * @attention This method is intended to set GMock expectations and should not
-   * be directly used by the user
-   *
-   * @see
-   * [EXPECT_CALL](https://google.github.io/googletest/reference/mocking.html#EXPECT_CALL)
-   * for reference
-   *
-   * @param params
-   * @return ResultFuture
-   */
-  [[nodiscard]] virtual ResultFuture asyncCall(const Parameters& params) = 0;
-
-  /**
-   * @brief Dispatches the cancel exception for the given asyncCall ResultFuture
-   * instance. Does nothing if no linked ResultFuture exist
-   *
-   * Used by CallableMock::cancelAsyncCall(uintmax_t) invocations
-   *
-   * @attention This method is intended to set GMock expectations and should not
-   * be directly used by the user
-   *
-   * @see
-   * [EXPECT_CALL](https://google.github.io/googletest/reference/mocking.html#EXPECT_CALL)
-   * for reference
-   *
-   * @param call_id
-   */
-  virtual void cancel(uintmax_t call_id) = 0;
-
-  /**
-   * @brief Dispatched the cancel exception to all currently linked  asyncCall
-   * ResultFuture instances
-   *
-   * Used by CallableMock::changeExecutor() or when this Executor instance is
-   * destroyed
-   *
-   * @attention This method is ment for cleanup operations and is not generally
-   * intended for testing purposes
-   */
-  virtual void cancelAll() = 0;
-
-  /**
-   * @brief Emulate the resultType() getter method
-   *
-   * Used by CallableMock::resultType() invocations
-   *
-   * @attention This method is intended to set GMock expectations and should
-   * not be directly used by the user
-   *
-   * @see
-   * [EXPECT_CALL](https://google.github.io/googletest/reference/mocking.html#EXPECT_CALL)
-   * for reference
-   *
-   * @return DataType
-   */
-  virtual DataType resultType() const = 0;
-
-  /**
-   * @brief Emulate the parameterTypes() getter method
-   *
-   * Used by CallableMock::parameterTypes() invocations
-   *
-   * @attention This method is intended to set GMock expectations and should
-   * not be directly used by the user
-   *
-   * @see
-   * [EXPECT_CALL](https://google.github.io/googletest/reference/mocking.html#EXPECT_CALL)
-   * for reference
-   *
-   * @return ParameterTypes
-   */
-  virtual ParameterTypes parameterTypes() const = 0;
-
-  /**
    * @brief Respond with a given response value to a given
    * CallableMock::call(uintmax_t), CallableMock::call(const Parameters&,
    * uintmax_t) or CallableMock::asyncCall(const Parameters&) ResultFuture
@@ -166,6 +69,21 @@ struct Executor {
    *
    */
   virtual void stop() = 0;
+
+private:
+  virtual void execute(const Parameters& params) = 0;
+
+  [[nodiscard]] virtual ResultFuture asyncCall(const Parameters& params) = 0;
+
+  virtual void cancel(uintmax_t call_id) = 0;
+
+  virtual void cancelAll() = 0;
+
+  virtual DataType resultType() const = 0;
+
+  virtual ParameterTypes parameterTypes() const = 0;
+
+  friend struct CallableMock;
 };
 
 using ExecutorPtr = std::shared_ptr<Executor>;
