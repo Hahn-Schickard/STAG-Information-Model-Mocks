@@ -255,7 +255,7 @@ auto with_static_method =
 Creating a Writable mock is really similar to creating Readable mocks, all of the Readable mock constructor signatures also apply for the Writable mocks, so we won't repeat them here. However Writable mock add a couple of new constructor signatures that allow to Mock read and write or write-only functionality.
 
 ```cpp
-#include <Information_Model_Mock/WritableleMock.hpp>
+#include <Information_Model_Mock/WritableMock.hpp>
 
 #include <functional>
 #include <memory>
