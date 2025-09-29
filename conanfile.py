@@ -116,7 +116,7 @@ class PackageConan(ConanFile):
         copy(self, pattern='AUTHORS', dst='licenses', src=self.cwd)
 
     def package_info(self):
-        self.cpp_info.libs = collect_libs(self)
+        self.cpp_info.libs = ["Information_Model_Mocks"]
         self.cpp_info.set_property("cmake_find_mode", "both")
         # @+ START USER DEFINES
         self.cpp_info.requires = [
